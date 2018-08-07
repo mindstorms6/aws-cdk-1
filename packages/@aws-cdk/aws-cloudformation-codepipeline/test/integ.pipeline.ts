@@ -32,11 +32,16 @@ const role = new Role(stack, 'CfnChangeSetRole', {
     assumedBy: new ServicePrincipal('cloudformation.amazonaws.com'),
 });
 
-new cfn_codepipeline.CreateReplaceChangeSet(cfnStage, 'DeployCFN', {
+new cfn_codepipeline.CreateReplaceChangeSet(cfnStage, 'MakeChangeSet', {
    changeSetName,
    stackName,
    roleArn: role.roleArn,
    templatePath: new ArtifactPath(source.artifact, 'test.yaml')
+});
+
+new cfn_codepipeline.ExecuteChangeSet(cfnStage, 'ExecuteChangeSet', {
+    changeSetName,
+    stackName,
 });
 
 process.stdout.write(app.run());
